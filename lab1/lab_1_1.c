@@ -11,31 +11,28 @@
     вывод соответствующего сообщения из системного массива сообщений об ошибках sys_errlist[], 
     вызов библиотечной функции perror.
 */
+
 #include <stdio.h>
-#include <sys/fcntl.h>
 #include <sys/errno.h>
+#include <sys/fcntl.h>
 #include <unistd.h>
 
 #define FILE_PATH "my_first_file.txt"
 
-void change_printf_to_error()
-{
+void change_printf_to_error() {
     printf("\033[0;31m");
 }
 
-void change_printf_to_log()
-{
+void change_printf_to_log() {
     printf("\033[0m");
 }
 
-int main()
-{
+int main() {
     errno = 0;
 
     int file_descriptor = open(FILE_PATH, O_RDONLY);
 
-    if (errno == ENOENT)
-    {
+    if (errno == ENOENT) {
         change_printf_to_error();
         printf("errno_code: %d\n", errno);
         perror("perror");
@@ -43,14 +40,12 @@ int main()
         change_printf_to_log();
     }
 
-    if (file_descriptor)
-    {
+    if (file_descriptor) {
         printf("file_descriptor exist\n");
         close(file_descriptor);
     }
 
-    if (errno == EBADF)
-    {
+    if (errno == EBADF) {
         change_printf_to_error();
         printf("errno_code: %d\n", errno);
         perror("perror");
