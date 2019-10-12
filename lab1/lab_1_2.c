@@ -23,8 +23,6 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#define FILE_PATH "my_first_file.txt"
-
 void change_printf_to_error() {
     printf("\033[0;31m");
 }
@@ -47,7 +45,7 @@ int main(const int argc, const char *argv[]) {
 
     printf("Открывается файл %s, с правами доступа %d\n", file_name, permission_mode);
 
-    int file_descriptor = open(file_name, O_WRONLY | O_CREAT);
+    int file_descriptor = open(file_name, O_WRONLY | O_CREAT, permission_mode);
 
     if (file_descriptor == -1) {
         change_printf_to_error();
@@ -69,8 +67,6 @@ int main(const int argc, const char *argv[]) {
     int close_result = close(file_descriptor);
     printf("Файла был закрыт с кодом %d\n", close_result);
 
-    if (chmod(file_name, permission_mode) < 0) perror("Ошибка выполнения chmod:");
-
     printf("\n");
 
     file_descriptor = open(file_name, O_RDONLY);
@@ -88,7 +84,7 @@ int main(const int argc, const char *argv[]) {
     close(file_descriptor);
 
     file_descriptor = open(file_name, O_RDWR);
-    printf("%d\n", file_descriptor);
+    printf("file_descriptor: %d\n", file_descriptor);
     perror("Открытие файла");
     close(file_descriptor);
 
