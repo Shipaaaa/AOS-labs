@@ -1,3 +1,3 @@
 # AOS-labs
 
-Laboratory works for lesson "Architecture of operating systems"
+Лабораторные работы по предмету "Архитектура операционных систем".
