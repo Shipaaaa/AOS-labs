@@ -33,7 +33,7 @@ int main(const int argc, const char *argv[]) {
     }
 
     const char *file_name = argv[1];
-    const int permission_mode = atoi(argv[2]);
+    const int permission_mode = strtol(argv[2], 0, 8);
 
     printf("Открывается файл %s, с правами доступа %d\n", file_name, permission_mode);
 

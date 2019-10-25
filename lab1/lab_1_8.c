@@ -63,7 +63,7 @@ int main(const int argc, const char *argv[]) {
             return -1;
         }
 
-        file_descriptor_result = open(file_name_result, O_WRONLY| O_CREAT, 0755);
+        file_descriptor_result = open(file_name_result, O_WRONLY | O_CREAT, 0755);
         if (errno != 0) {
             perror("Возникла ошибка при открытии файла.");
             return -1;

@@ -85,7 +85,7 @@ int main(const int argc, const char *argv[]) {
     }
 
     char read_buffer[255];
-    lseek(file_descriptor, 0, SEEK_SET);
+
     while (read(file_descriptor, read_buffer, 255) > 0)
         printf("%s\n", read_buffer);
     perror("Прочитали из файла");

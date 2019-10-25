@@ -41,11 +41,11 @@ int main(const int argc, const char *argv[]) {
     }
 
     const char *file_name = argv[1];
-    const int permission_mode = atoi(argv[2]);
+    const int permission_mode = strtol(argv[2], 0, 8);
 
-    printf("Открывается файл %s, с правами доступа %d\n", file_name, permission_mode);
+    printf("Открывается файл %s, с правами доступа %o\n", file_name, permission_mode);
 
-    int file_descriptor = open(file_name, O_WRONLY | O_CREAT, permission_mode);
+    int file_descriptor = open(file_name, O_WRONLY | O_TRUNC | O_CREAT, permission_mode);
 
     if (file_descriptor == -1) {
         change_printf_to_error();
@@ -55,11 +55,10 @@ int main(const int argc, const char *argv[]) {
     }
 
     // TODO Сделать ввод текста с клавиатуры.
-    char *test_string = "несколько строк\n";
+    char *test_string = "неск\n";
     int count = 3;
-    int file_len = strlen(test_string) * count;
 
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < count; i++) {
         int ssize_t = write(file_descriptor, test_string, strlen(test_string));
         printf("%d символов записано\n", ssize_t);
     }
@@ -78,6 +77,7 @@ int main(const int argc, const char *argv[]) {
         return 0;
     }
 
+    int file_len = strlen(test_string) * count;
     char read_buffer[file_len];
     read(file_descriptor, read_buffer, file_len);
     printf("%s\n", read_buffer);

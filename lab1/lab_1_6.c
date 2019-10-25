@@ -35,7 +35,7 @@ int main(const int argc, const char *argv[]) {
 
     printf("Открывается файл %s, с правами доступа %o\n\n", file_name, permission_mode);
 
-    int file_descriptor = open(file_name, O_WRONLY | O_CREAT, permission_mode);
+    int file_descriptor = open(file_name, O_WRONLY | O_TRUNC | O_CREAT, permission_mode);
     perror("Открыли файл 1 раз");
 
     if (file_descriptor == -1) {
@@ -46,21 +46,15 @@ int main(const int argc, const char *argv[]) {
     }
 
     // TODO Сделать ввод текста с клавиатуры.
-    char *test_string = "несколько строк\n";
+    char *test_string = "не";
     int count = 3;
     int file_len = strlen(test_string) * count;
 
-    lseek(file_descriptor, 1000, SEEK_SET);
     int ssize_t = write(file_descriptor, test_string, strlen(test_string));
     printf("%d символов записано\n", ssize_t);
     perror("Записали в файл");
 
-    lseek(file_descriptor, 27, SEEK_END);
-    ssize_t = write(file_descriptor, test_string, strlen(test_string));
-    printf("%d символов записано\n", ssize_t);
-    perror("Записали в файл");
-
-    lseek(file_descriptor, 10, SEEK_CUR);
+    lseek(file_descriptor, 100000, SEEK_SET);
     ssize_t = write(file_descriptor, test_string, strlen(test_string));
     printf("%d символов записано\n", ssize_t);
     perror("Записали в файл");

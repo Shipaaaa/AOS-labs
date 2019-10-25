@@ -58,7 +58,6 @@ int main(const int argc, const char *argv[]) {
     const char *file_name_for_redirect_std_in = argv[1];
     const char *file_name_for_redirect_std_out = argv[2];
 
-    close(STD_IN);
     file_descriptor_for_redirect_std_in = open(file_name_for_redirect_std_in, O_RDONLY);
     dup2(file_descriptor_for_redirect_std_in, STD_IN);
     if (errno != 0) {
@@ -68,7 +67,7 @@ int main(const int argc, const char *argv[]) {
 
     close(STD_OUT);
     file_descriptor_for_redirect_std_out = open(file_name_for_redirect_std_out, O_WRONLY | O_CREAT, 0755);
-    dup2(file_descriptor_for_redirect_std_out, STD_OUT);
+    // dup2(file_descriptor_for_redirect_std_out, STD_OUT);
     if (errno != 0) {
         perror("Возникла ошибка при открытии файла для переопределения std out.");
         return -1;

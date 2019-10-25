@@ -83,7 +83,7 @@ int main(const int argc, const char *argv[]) {
     printf("Идентификатор пользователя-владельца файла: %ld\n", (long)stat_buffer.st_uid);
     printf("Идентификатор группы-владельца файла: %ld\n", (long)stat_buffer.st_gid);
     printf("Размер файла в байтах. Для специальных файлов устройств это поле не определено: %lld\n", (long long)stat_buffer.st_size);
-    printf("Оптимальный размер блока для операций ввода-вывода. Для специальных файлов устройств и каналов это поле не опре­ делено: %ld\n", (long)stat_buffer.st_blksize);
+    printf("Оптимальный размер блока для операций ввода-вывода. Для специальных файлов устройств и каналов это поле не опре­делено: %ld\n", (long)stat_buffer.st_blksize);
     printf("Число размещенных блоков хранения данных. Для специаль­ ных файлов устройств это поле не определено: %lld\n", (long long)stat_buffer.st_blocks);
     printf("Время последнего доступа к файлу: %ld\n", (long)stat_buffer.st_atime);
     printf("Время последней модификации данных файла: %ld\n", (long)stat_buffer.st_mtime);
