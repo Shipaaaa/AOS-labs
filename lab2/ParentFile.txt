@@ -1,0 +1,5 @@
+НАЧАЛО ФАЙЛА
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus a eros placerat, cursus purus eget, luctus ante. Suspendisse vehicula accumsan interdum. Curabitur aliquam congue neque, ac tincidunt dui blandit vel. Suspendisse potenti. Mauris mollis nisl ac sapien euismod, vehicula facilisis dui finibus. Aliquam et lorem non est vestibulum molestie. Aliquam bibendum maximus massa ac varius. Fusce velit nibh, dapibus nec ultricies sit amet, semper sed nunc. Maecenas consectetur lectus non consequat ullamcorper. Quisque pretium faucibus tincidunt. Sed at velit vestibulum ante scelerisque mollis a eget justo. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque gravida bibendum mauris vel congue. Donec at consectetur odio.
+
+КОНЕЦ ФАЙЛА
