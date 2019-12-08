@@ -41,16 +41,16 @@ void checkPerror(char *errorMessage) {
     if (errno != 0) perror(errorMessage);
 }
 
-int main(int argc, char *argv[], char *argp[]) {
+int main(int argc, char **argv) {
     pid_t pid;
-    int status, numBytes, file_descriptor;
-    char buffer, msg[255];
+    int status, numBytes, filedes;
+    char buf, msg[255];
     strcpy(msg, "");
 
     int pipe_file_descriptors[2];
 
     if (pipe(pipe_file_descriptors) < 0) {
-        checkPerror("Error of creating channel");
+        checkPerror("pipe");
         exit(EXIT_FAILURE);
     }
 
@@ -59,53 +59,56 @@ int main(int argc, char *argv[], char *argp[]) {
 
     pid = fork();
     if (pid < 0) {
-        checkPerror("Error of forking");
+        checkPerror("fork");
         exit(EXIT_FAILURE);
     }
 
     if (pid == 0) {
-        printf("Дочерний: Выполнение дочернего процесса\n");
-        printf("Дочерний: Параметры дочернего pid=%d ppid=%d grp=%d\n", getpid(), getppid(), getpgrp());
+        printf("\nДочерний: Выполнение дочернего процесса");
+        printf("\nДочерний: Параметры дочернего pid=%d ppid=%d grp=%d\n", getpid(), getppid(), getpgrp());
 
-        printf("pipefd1[0] = %d\npipefd1[1] = %d\n", read_file_descriptor, write_file_descriptor);
+        printf("\npipefd1[0] = %d\npipefd1[1] = %d\n", read_file_descriptor, write_file_descriptor);
+        close(read_file_descriptor); 
 
-        close(read_file_descriptor);
-
-        /* Делаем dup, чтобы занести открытый дескриптор pipe на запись в таблицу открытых дескрипторов процесса в позицию file_descriptor */
-        /* После exec сможем обращаться к дескриптору file_descriptor и писать в него */
-        file_descriptor = dup(write_file_descriptor);
-        if (file_descriptor < 0) {
-            checkPerror("Error of dup");
+        /* Делаем dup, чтобы занести открытый дескриптор pipe на запись в таблицу открытых дескрипторов процесса в позицию fildes */
+        /* После exec сможем обращаться к дескриптору fildes и писать в него */
+        filedes = dup(write_file_descriptor);
+        if (filedes < 0) {
+            checkPerror("dup");
             exit(EXIT_FAILURE);
         }
 
-        printf("\nДочерний: file_descriptor = %d", file_descriptor);
+        printf("\nДочерний: filedes = %d", filedes);
+
         close(write_file_descriptor);
 
-        char file_descriptor_string[10] = "";
-        sprintf(file_descriptor_string, "%d", file_descriptor);
-
-        if (execl("lab_4_4_child", "lab_4_4_child", file_descriptor_string, NULL) < 0) {
-            checkPerror("Error of forking");
+        char filedesStr[10] = "";
+        sprintf(filedesStr, "%d", filedes);
+        if (execl("lab_4_4_child", "lab_4_4_child", filedesStr, NULL) < 0) {
+            checkPerror("exec");
             exit(EXIT_FAILURE);
         }
     } else {
-        printf("Родитель: Выполнение родительского процесса\n");
-        printf("Родитель: Параметры родительского pid=%d ppid=%d grp=%d\n\n", getpid(), getppid(), getpgrp());
-
+        printf("\nРодительский: Выполнение родительского процесса");
+        printf("\nРодительский: Параметры родительского pid=%d ppid=%d grp=%d\n", getpid(), getppid(), getpgrp());
         close(write_file_descriptor);
 
-        while ((numBytes = read(read_file_descriptor, &buffer, 1)) != 0) {
+        //Работает, в отличие от нижнего блока
+        //Если read возвращает 0 - значит, что канал был закрыт, EOF
+        while ((numBytes = read(read_file_descriptor, &buf, 1)) != 0) {
+            //Если открыли с помощью pipe2(pipe_file_descriptors, O_NONBLOCK), так можем отловить ошибку, когда в канале нет данных (EAGAIN)
             if (numBytes < 0) {
-                checkPerror("Error of reading");
+                checkPerror("read");
                 break;
             }
-            write(STDOUT_FILENO, &buffer, 1);
+            write(STDOUT_FILENO, &buf, 1);
         }
 
         close(read_file_descriptor);
-        
+
         printf("\nРодительский: ожидаем\n");
+
+        //Ожидаем завершения дочернего. Должен завершиться от SIGPIPE
         waitpid(pid, &status, 0);
 
         if (WIFEXITED(status))

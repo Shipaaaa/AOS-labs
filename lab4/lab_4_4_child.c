@@ -2,10 +2,6 @@
 // Created by Vladislav Shipugin on 23.11.19.
 //
 
-/*
-5. С помощью системных вызовов pipe и dup реализовать конвейер: who | wc -l.
-*/
-
 #include <fcntl.h>
 #include <signal.h>
 #include <stdbool.h>
@@ -39,10 +35,7 @@ void checkPerror(char *errorMessage) {
     if (errno != 0) perror(errorMessage);
 }
 
-#define STD_IN 0
-#define STD_OUT 1
-
-int main(int argc, char *argv[], char *argp[]) {
+int main(int argc, char **argv) {
     printf("\nНачало нового исполняемого кода, загруженного в дочернем процессе\n");
     printf("\nПараметры дочернего процесса в новом коде pid=%d ppid=%d grp=%d\n", getpid(), getppid(), getpgrp());
 
@@ -52,22 +45,19 @@ int main(int argc, char *argv[], char *argp[]) {
     }
 
     int i;
-    char buf;
+    char buffer;
 
-    for (i = 0; i < argc; i++) {
-        printf("\nargv[%d] = %s\n", i, argv[i]);
-    }
+    for (i = 0; i < argc; i++) printf("\nargv[%d] = %s\n", i, argv[i]);
 
     int fildes = atoi(argv[1]);
 
     printf("\nБыл открыт переданный дескриптор pipe на запись: %d\n", fildes);
 
     //! Если мы открываем с O_NONBLOCK, и родительский завершается, закрывает канал на чтение, то при записи в этот канал получим SIGPIPE
-    while (read(0, &buf, 1) > 0) {
-        write(fildes, &buf, 1);
+    while (read(0, &buffer, 1) > 0) {
+        write(fildes, &buffer, 1);
     }
 
-    //Закрываем дескриптор на запись
     close(fildes);
     exit(EXIT_SUCCESS);
 }
